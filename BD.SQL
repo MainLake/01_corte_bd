@@ -33,33 +33,45 @@ CREATE TABLE comprador(
 );
 
 
-Create table Clasificacion_fotografias(
+CREATE TABLE clasificacion_fotografias(
     id_grupo SERIAL PRIMARY KEY ,
     grupo VARCHAR(15)
 );
+
+INSERT INTO clasificacion_fotografias(grupo) 
+    VALUES 
+        ('abstractas'), 
+        ('retratos'), 
+        ('paisajes');
 
 /* este tiene foranea */
 
 
 -- Tablas que son dependientes
 create table fotografias (
-    tipo_color varchar(5) not null,
-    fecha_toma: date not null,
-    tipo_filme varchar(10) not null
-    velocidad_obturador float not null,
-    precio float not null,
-    derechos_autor varchar(100) not null,
-    id_foto serial primary key,
-    comentario_artista text not null,
-    id_fotografo references fotografo(id_fotografo),
-    id_modelo references modelo(id_modelo),
-    id_lugar references lugar(id_lugar)
-)
+    id_fotografia SERIAL PRIMARY KEY,
+    tipo_color VARCHAR(5) NOT NULL,
+    fecha_toma DATE NOT NULL,
+    tipo_filme VARCHAR(10) NOT NULL,
+    velocidad_obturador FLOAT NOT NULL,
+    precio FLOAT NOT NULL,
+    derechos_autor VARCHAR(100) NOT NULL,
+    comentario_artista TEXT NOT NULL,
+    id_fotografo INTEGER REFERENCES fotografo(id_fotografo),
+    id_modelo INTEGER REFERENCES modelo(id_modelo),
+    id_lugar INTEGER REFERENCES lugar(id_lugar),
+    id_grupo INTEGER REFERENCES clasificacion_fotografias(id_grupo)
+);
 
-create table grupo_foto (
-    id_grupo serial not null,
-    id_foto references fotografias(id_foto)
-)
+CREATE TABLE carrito_compra(
+    id_carrito SERIAL PRIMARY KEY,
+    total_pago FLOAT,
+    id_fotografia INTEGER REFERENCES fotografia(id_fotografia),
+    id_comprador INTEGER REFERENCES comprador(id_comprador),
+    
+);
+
+
 
 create table carrito_tipo_pago(
     id_carrito primary key UNIQUE,
@@ -81,10 +93,3 @@ create table Deposito_bancario(
     tipo_pago SERIAL PRIMARY KEY,
 );
 
-CREATE TABLE carrito_compra(
-    id_carrito VARCHAR(10) SERIAL PRIMARY KEY,
-    total_pago FLOAT,
-    id_foto REFERENCES grupo_foto(id_foto),
-    id_comprador REFERENCES comprador(id_comprador),
-
-);
